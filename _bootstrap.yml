@@ -1,0 +1,37 @@
+services:
+  quake3server:
+    image: ghcr.io/dmitry-osin/quake3server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quake3server
+    restart: unless-stopped
+    ports:
+      - "${NET_PORT:-26960}:26960/udp"
+    volumes:
+      - ./baseq3:/home/ioq3srv/server/baseq3
+      - ./osp:/home/ioq3srv/server/osp
+      - ./config/1v1.cfg:/home/ioq3srv/server/1v1.cfg
+    environment:
+      - SV_HOSTNAME=${SV_HOSTNAME:-AktiveHateX DUEL Server}
+      - G_GAMETYPE=${G_GAMETYPE:-1}
+      - FRAG_LIMIT=${FRAG_LIMIT:-0}
+      - TIME_LIMIT=${TIME_LIMIT:-10}
+      - SV_MAXCLIENTS=${SV_MAXCLIENTS:-16}
+      - NET_PORT=${NET_PORT:-26960}
+      - RCON_PASSWORD=${RCON_PASSWORD:-qwerty}
+      - SV_DEDICATED=${SV_DEDICATED:-2}
+      - G_QUADFACTOR=${G_QUADFACTOR:-3}
+      - G_INACTIVITY=${G_INACTIVITY:-120}
+      - SV_ALLOWDOWNLOAD=${SV_ALLOWDOWNLOAD:-1}
+      - G_ALLOWVOTE=${G_ALLOWVOTE:-1}
+      - COM_HUNKMEGS=${COM_HUNKMEGS:-256}
+      - SV_PURE=${SV_PURE:-1}
+      - FS_GAME=${FS_GAME:-osp}
+      - MAP=${MAP:-bloodrun}
+      - CONFIG_FILE=${CONFIG_FILE:-1v1.cfg}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
